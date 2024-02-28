@@ -1,2 +1,2 @@
-# SIK-Pub
+# Zabbix templates
 Public Repo
