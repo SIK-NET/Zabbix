@@ -1,0 +1,37 @@
+zabbix_export:
+  version: '6.0'
+  date: '2024-02-28T17:18:48Z'
+  groups:
+    - uuid: b9390195ecad4986968746a2a9b56354
+      name: 'My Templates'
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 4458f02a6c654346af0c2b2fe9377447
+      template: RDPActiveUsers
+      name: RDPActiveUsers
+      description: |
+        ## Overview
+        
+        RDP Active Users (OS in French)
+        
+        1) Add User parameter in config file zabbix\_agentd.conf:
+        UserParameter=RDPActiveUsers,"C:\Zabbix\RDPActiveUsers.cmd"
+        
+        2) Copy the Script File "RDPActiveUsers.cmd" in C:\Zabbix\:
+        
+      groups:
+        - name: 'My Templates'
+        - name: Templates
+      items:
+        - uuid: 8c34a0ed92bf4547b86d7d120d69fa3a
+          name: 'Active Users'
+          type: ZABBIX_ACTIVE
+          key: RDPActiveUsers
+          delay: '10'
+          history: 30d
+          units: users
+          description: 'Graph of the number of active users'
+          tags:
+            - tag: Application
+              value: RDPActiveUsers
