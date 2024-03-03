@@ -17,14 +17,12 @@ User parameter in zabbix\_agentd.conf: UserParameter=RDPActiveUsers,"c:\Zabbix\R
 
 Script RDPActiveUsers.cmd: it is set to parse the current server where the script is located.
 
-::@echo off
+@echo off
 :: User Variable
 Set CurrentServer=%COMPUTERNAME%
 
 :: Script
-Set Active=0
-for /F "usebackq tokens=1,2,3,4,5*" %%i in (`qwinsta /server:"%CurrentServer%" ^| find "Actif"`) do if "%%l" == "Actif" (set /a Active=Active+1)
-echo %Active%
+qwinsta /server:"%CurrentServer%" | FIND /C "Actif"
 
 To adapt the script to your language:
 1- on the RDP Server, run in CMD : qwinsta /server:"%COMPUTERNAME%"
