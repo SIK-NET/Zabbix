@@ -1,4 +1,4 @@
-::@echo off
+@echo off
 :: User Variable
 Set CurrentServer=%COMPUTERNAME%
 
