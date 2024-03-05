@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2024-02-28T13:31:45Z'
+  date: '2024-03-05T19:05:18Z'
   groups:
     - uuid: b9390195ecad4986968746a2a9b56354
       name: 'My Templates'
@@ -53,70 +53,77 @@ zabbix_export:
           triggers:
             - uuid: a2868d820dbf46abbcabda9ea09e5e27
               expression: 'nodata(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],604800s)=1'
-              name: 'VeeamAgent - No job result since 1 Week'
+              name: 'VeeamBackup - No job result since 1 Week'
               priority: HIGH
               manual_close: 'YES'
             - uuid: 839b2a2475124d82a9425d02538d20c1
-              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=1'
-              name: 'VeeamAgent Job completed successfull'
+              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=1 and now()=1'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 or now()<>0'
+              name: 'VeeamBackup Job completed successfull'
               priority: INFO
               description: |
                 {ITEM.LASTVALUE1}
                 {ITEM.LASTVALUE2}
                 {ITEM.LASTVALUE3}
+              type: MULTIPLE
+              manual_close: 'YES'
             - uuid: 49dbdc2cacf746c88e8fe380fb67c88d
               expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=2 and find(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"iregexp","low on free disk space")=1'
-              name: 'VeeamAgent Job completed successfull  (warning about free space)'
+              name: 'VeeamBackup Job completed successfull  (warning about free space)'
               priority: INFO
               description: |
                 {ITEM.LASTVALUE1}
                 {ITEM.LASTVALUE2}
                 {ITEM.LASTVALUE3}
+              type: MULTIPLE
               manual_close: 'YES'
             - uuid: dbf4d7f2d5164c8490a143f36e800393
               expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=4'
-              name: 'VeeamAgent Job completed with error'
+              name: 'VeeamBackup Job completed with error'
               priority: HIGH
               description: |
                 {ITEM.LASTVALUE1}
                 {ITEM.LASTVALUE2}
                 {ITEM.LASTVALUE3}
+              type: MULTIPLE
               manual_close: 'YES'
             - uuid: e8a73823a6c74b2b832974a41d963282
               expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=2 and not  logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"low on free disk space")=0'
-              name: 'VeeamAgent Job completed with warning'
+              name: 'VeeamBackup Job completed with warning'
               priority: AVERAGE
               description: |
                 {ITEM.LASTVALUE1}
                 {ITEM.LASTVALUE2}
                 {ITEM.LASTVALUE3}
+              type: MULTIPLE
               manual_close: 'YES'
         - uuid: 77760e6ee7884a7185fa8b424f34596e
           name: VeeamBackup_EventLog_JobRetry
           type: ZABBIX_ACTIVE
-          key: 'eventlog[Veeam Backup,,,Veeam MP,191,,]'
+          key: 'eventlog[Veeam Backup,,,Veeam MP,191,,skip]'
           delay: 5m
           history: 30d
           trends: '0'
           value_type: LOG
           tags:
             - tag: Application
-              value: VeeamAgent_EventLog
+              value: VeeamBackup_EventLog
         - uuid: a1536fed539241b39996f3722fe3cb1a
           name: VeeamBackup_EventLog_Synchronisation
           type: ZABBIX_ACTIVE
-          key: 'eventlog[Veeam Backup,,,Veeam MP,195,,]'
+          key: 'eventlog[Veeam Backup,,,Veeam MP,195,,skip]'
           delay: 5m
           history: 30d
           trends: '0'
           value_type: LOG
           tags:
             - tag: Application
-              value: VeeamAgent_EventLog
+              value: VeeamBackup_EventLog
           triggers:
             - uuid: 1f94481d893245b1889c86bd72cd468b
-              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,],,"195")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,])=4'
-              name: 'VeeamAgent Synchronization completed with error'
+              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,skip],,"195")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,skip])=4'
+              name: 'VeeamBackup Synchronization completed with error'
               priority: HIGH
               description: |
                 {ITEM.LASTVALUE1}
@@ -124,8 +131,8 @@ zabbix_export:
                 {ITEM.LASTVALUE3}
               manual_close: 'YES'
             - uuid: f225c9afdc414bf1b2784242c04040f6
-              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,],,"195")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,])=2'
-              name: 'VeeamAgent Synchronization completed with warning'
+              expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,skip],,"195")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,195,,skip])=2'
+              name: 'VeeamBackup Synchronization completed with warning'
               priority: WARNING
               description: |
                 {ITEM.LASTVALUE1}
@@ -141,23 +148,23 @@ zabbix_export:
           trends: 30d
           tags:
             - tag: Application
-              value: VeeamAgent_Service
+              value: VeeamBackup_Service
           triggers:
             - uuid: fbadead2566e47fda4636eee9c7b19a1
               expression: 'nodata(/VEEAM-Backup/service.info[VeeamBackupSvc],86400s)=1'
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: 'last(/VEEAM-Backup/service.info[VeeamBackupSvc])=0 or last(/VEEAM-Backup/service.info[VeeamBackupSvc])<>0'
-              name: 'VeeamAgent - No result from service since 24h'
+              name: 'VeeamBackup - No result from service since 24h'
               priority: HIGH
               manual_close: 'YES'
               dependencies:
-                - name: 'VeeamAgent - No job result since 1 Week'
+                - name: 'VeeamBackup - No job result since 1 Week'
                   expression: 'nodata(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],604800s)=1'
             - uuid: 06f6155fcd5442b3aae341d0a4e4c870
               expression: 'last(/VEEAM-Backup/service.info[VeeamBackupSvc])<>0'
               recovery_mode: RECOVERY_EXPRESSION
               recovery_expression: 'last(/VEEAM-Backup/service.info[VeeamBackupSvc])=0'
-              name: 'VeeamAgent Service Down'
+              name: 'VeeamBackup Service Down'
               priority: HIGH
               description: |
                 {ITEM.LASTVALUE1}
@@ -166,13 +173,14 @@ zabbix_export:
               manual_close: 'YES'
   triggers:
     - uuid: 516dd032567f44a9bea92901808fe59b
-      expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,191,,],,"191")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,191,,])=2'
+      expression: 'logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,191,,skip],,"191")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,191,,skip])=2'
       recovery_mode: RECOVERY_EXPRESSION
       recovery_expression: '(logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=1) or (logeventid(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"190")=1 and logseverity(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip])=2 and find(/VEEAM-Backup/eventlog[Veeam Backup,,,Veeam MP,190,,skip],,"iregexp","low on free disk space")=1)'
-      name: 'VeeamAgent Job Retry'
+      name: 'VeeamBackup Job Retry'
       priority: WARNING
       description: |
         {ITEM.LASTVALUE1}
         {ITEM.LASTVALUE2}
         {ITEM.LASTVALUE3}
+      type: MULTIPLE
       manual_close: 'YES'
